@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выберите композицию</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Выберите композицию</h1>
+    <button onclick="openPinterest()">Открыть Pinterest</button>
+    <button onclick="selectImage()">Выбрать эту композицию</button>
+
+    <script>
+        let pinterestWindow = null;
+        let selectedImageUrl = '';
+
+        // Функция для открытия Pinterest в новой вкладке
+        function openPinterest() {
+            const theme = new URLSearchParams(window.location.search).get('theme');
+            const pinterestUrl = `https://www.pinterest.com/search/pins/?q=${encodeURIComponent(theme)}`;
+            pinterestWindow = window.open(pinterestUrl, '_blank');
+        }
+
+        // Функция для выбора композиции
+        function selectImage() {
+            if (!pinterestWindow || pinterestWindow.closed) {
+                alert('Пожалуйста, сначала откройте Pinterest!');
+                return;
+            }
+
+            // Получаем текущий URL из открытой вкладки Pinterest
+            selectedImageUrl = pinterestWindow.location.href;
+
+            // Отправляем данные в бот
+            Telegram.WebApp.sendData(JSON.stringify({ image_url: selectedImageUrl }));
+            Telegram.WebApp.close();
+        }
+    </script>
+</body>
+</html>
