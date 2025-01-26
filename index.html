@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +10,17 @@
             margin: 0;
             padding: 10px;
             background-color: #f9f9f9;
+        }
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .gallery img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
         }
         button {
             display: block;
@@ -26,33 +37,36 @@
 </head>
 <body>
     <h1>Выберите композицию</h1>
-    <button onclick="openPinterest()">Открыть Pinterest</button>
+    <div class="gallery" id="gallery">
+        <!-- Изображения будут добавлены сюда -->
+    </div>
     <button onclick="selectImage()">Выбрать эту композицию</button>
 
     <script>
-        let pinterestWindow = null;
-        let selectedImageUrl = '';
+        const theme = new URLSearchParams(window.location.search).get('theme');
 
-        // Функция для открытия Pinterest в новой вкладке
-        function openPinterest() {
-            const theme = new URLSearchParams(window.location.search).get('theme');
-            const pinterestUrl = `https://www.pinterest.com/search/pins/?q=${encodeURIComponent(theme)}`;
-            pinterestWindow = window.open(pinterestUrl, '_blank');
+        if (theme) {
+            fetch(`https://your-heroku-app.herokuapp.com/images?theme=${theme}`)
+                .then(response => response.json())
+                .then(data => {
+                    const gallery = document.getElementById('gallery');
+                    data.images.forEach(imageUrl => {
+                        const img = document.createElement('img');
+                        img.src = imageUrl;
+                        gallery.appendChild(img);
+                    });
+                })
+                .catch(error => console.error('Ошибка загрузки изображений:', error));
         }
 
-        // Функция для выбора композиции
         function selectImage() {
-            if (!pinterestWindow || pinterestWindow.closed) {
-                alert('Пожалуйста, сначала откройте Pinterest!');
-                return;
+            const selectedImage = document.querySelector('.gallery img:focus')?.src;
+            if (selectedImage) {
+                Telegram.WebApp.sendData(JSON.stringify({ image_url: selectedImage }));
+                Telegram.WebApp.close();
+            } else {
+                alert('Пожалуйста, выберите изображение.');
             }
-
-            // Получаем текущий URL из открытой вкладки Pinterest
-            selectedImageUrl = pinterestWindow.location.href;
-
-            // Отправляем данные в бот
-            Telegram.WebApp.sendData(JSON.stringify({ image_url: selectedImageUrl }));
-            Telegram.WebApp.close();
         }
     </script>
 </body>
