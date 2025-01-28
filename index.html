@@ -46,7 +46,7 @@
         const theme = new URLSearchParams(window.location.search).get('theme');
 
         if (theme) {
-           fetch(`http://127.0.0.1:5000/images?theme=${theme}`)
+           fetch(`https://b123qt-2a00-1370-81ae-2d0e-c923-189b-c349-644f.ru.tuna.am/images?theme=${theme}`)
                 .then(response => response.json())
                 .then(data => {
                     const gallery = document.getElementById('gallery');
