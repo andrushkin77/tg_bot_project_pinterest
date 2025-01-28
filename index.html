@@ -46,7 +46,7 @@
         const theme = new URLSearchParams(window.location.search).get('theme');
 
         if (theme) {
-            fetch(`https://your-heroku-app.herokuapp.com/images?theme=${theme}`)
+           fetch(`http://127.0.0.1:5000/images?theme=${theme}`)
                 .then(response => response.json())
                 .then(data => {
                     const gallery = document.getElementById('gallery');
