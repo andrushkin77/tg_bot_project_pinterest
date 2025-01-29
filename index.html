@@ -37,19 +37,27 @@
 </head>
 <body>
     <h1>Выберите композицию</h1>
-    <div class="gallery" id="gallery">
-        <!-- Изображения будут добавлены сюда -->
-    </div>
+    <div class="gallery" id="gallery"></div>
     <button onclick="selectImage()">Выбрать эту композицию</button>
 
     <script>
+        // Получаем тему из параметров URL
         const theme = new URLSearchParams(window.location.search).get('theme');
-
+        
         if (theme) {
-          fetch(`https://obnn8y-82-204-189-161.ru.tuna.am/images?theme=%D1%88%D0%B0%D1%80%D1%8B%20%D0%BD%D0%B0%20%D0%B4%D0%B5%D0%BD%D1%8C%20%D1%80%D0%BE%D0%B6%D0%B4%D0%B5%D0%BD%D0%B8%D1%8F`)
+            // Формируем URL для запроса к API
+            const apiUrl = `https://obnn8y-82-204-189-161.ru.tuna.am/images?theme=${encodeURIComponent(theme)}`;
+            
+            // Выполняем запрос к API
+            fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
                     const gallery = document.getElementById('gallery');
+                    
+                    // Очищаем галерею от предыдущих изображений
+                    gallery.innerHTML = '';
+                    
+                    // Добавляем новые изображения в галерею
                     data.images.forEach(imageUrl => {
                         const img = document.createElement('img');
                         img.src = imageUrl;
