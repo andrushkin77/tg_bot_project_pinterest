@@ -42,9 +42,9 @@
         const urlParams = new URLSearchParams(window.location.search);
         const query = urlParams.get('query');
 
-        // Загружаем Pinterest с запросом пользователя
+        // Используем ScrapingBee для загрузки Pinterest через прокси
         const iframe = document.getElementById('pinterest-iframe');
-        iframe.src = `https://ru.pinterest.com/search/pins/?q=${encodeURIComponent(query)}`;
+        iframe.src = `https://app.scrapingbee.com/api/v1/?api_key=8KR72F55F5EK1DKJ0ZMLDHZTSS1P3BRIYEA2QWYBAOEKGXSDQ96RJA5HJSMJICBDJ9Q0X5YQDPS7528Y&url=https://ru.pinterest.com/search/pins/?q=${encodeURIComponent(query)}`;
 
         // Обработчик выбора изображения
         document.getElementById('select-button').addEventListener('click', () => {
